@@ -1,0 +1,39 @@
+$(document).ready(function() {
+    $('.withdraw-confirm-popup__cancel').on('click', function() {
+
+        window.location.href = "../index.php";
+    });
+
+    $('.withdraw-confirm-popup__submit').on('click', () => {
+
+        var money = $('#money').val();
+        var pnumber = $('#pnum').val();
+        if (money < 1) {
+            alert("Cannot withdraw less than 100");
+        } else {
+            $('.withdraw-confirm-popup__submit').attr("value", "Processing");
+            $.ajax({
+                type: "POST",
+                url: "../php_handlers/withdrawhandle.php",
+
+                data: {
+                    money: money,
+                    number: pnumber
+                },
+                success: function(response) {
+                    console.log(response)
+                    var result = $.trim(response);
+                    if (result == "0") {
+                        window.location.replace("../index.php");
+                    } else if (result == "bal") {
+                        alert("Account Balance is Low");
+                    } else {
+                        alert("An error occured please try again");
+                    }
+
+                }
+            });
+        }
+
+    });
+});
